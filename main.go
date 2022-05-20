@@ -20,7 +20,8 @@ func main() {
 	if data.Cookie == "" {
 		login.Login()
 	} else {
-		log.Info("cookie存在,无需登录")
+		log.Info("Cache/Data存在,无需登录")
 	}
+	login.LoginInfo()
 
 }

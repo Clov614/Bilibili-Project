@@ -1,21 +1,10 @@
 package yaml
 
 import (
-	nested "github.com/antonfisher/nested-logrus-formatter"
-	"github.com/mattn/go-colorable"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
-	"time"
-)
-
-type Data struct {
-	Cookie string
-}
-
-var (
-	data = Data{}
 )
 
 func PathExists(path string) bool {
@@ -29,63 +18,26 @@ func PathExists(path string) bool {
 	return false
 }
 
-// 生成默认的空白Data.yaml
-func init() {
-	log.SetFormatter(&nested.Formatter{
-		NoColors:        true,
-		ShowFullLevel:   true,
-		HideKeys:        true,
-		TimestampFormat: time.RFC3339,
-	})
-	log.SetOutput(colorable.NewColorableStdout())
-
-	if !PathExists("./Data/Cache") {
-		err := os.MkdirAll("./Data/Cache", 0766)
-		if err != nil {
-			log.Fatalln("创建Data目录失败:", err)
-		}
+func WriteYaml(_type interface{}, path string) {
+	//dataStr为[]byte,准备写入yaml
+	dataStr, err := yaml.Marshal(_type)
+	if err != nil {
+		log.Fatalln("WriteYaml() Error: ", err)
 	}
 
-	if !PathExists("./Data/Cache/Data.yaml") {
-		createYaml(&data)
-		log.Info("生成默认Data.yaml成功")
+	err = ioutil.WriteFile(path, dataStr, 0644)
+	if err != nil {
+		log.Fatalln("WriteYaml() writeFile Error path: "+path, err)
 	}
 }
 
-func SaveCookie(cookie string) {
-	data = Data{
-		Cookie: cookie,
-	}
-	createYaml(&data)
-
-}
-
-//将Data写入/Data/Cache/Data.yaml
-func createYaml(data *Data) {
-	dataStr, err := yaml.Marshal(data)
+func ReadYaml(_type interface{}, path string) {
+	file, err := os.ReadFile(path)
 	if err != nil {
-		log.Fatalln("转换Data to yaml error:", err)
+		log.Fatalln("读取Error path: "+path, err)
 	}
-
-	err = ioutil.WriteFile("./Data/Cache/Data.yaml", dataStr, 0644)
+	err = yaml.Unmarshal(file, _type)
 	if err != nil {
-		log.Fatalln("写入Data.yaml error:", err)
+		log.Fatalln("ERROR:"+path+" to data error: ", err)
 	}
-
-}
-
-func readYaml() {
-	file, err := os.ReadFile("./Data/Cache/Data.yaml")
-	if err != nil {
-		log.Fatalln("读取Data.yaml error:", err)
-	}
-	err = yaml.Unmarshal(file, &data)
-	if err != nil {
-		log.Fatalln("Data.yaml to data error: ", err)
-	}
-}
-
-func Getdata() Data {
-	readYaml()
-	return data
 }

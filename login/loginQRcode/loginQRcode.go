@@ -70,7 +70,7 @@ func (LD *LoginDate) loginInit() {
 	cmd.PrintQRcode(LD.res.Data.Url)
 }
 
-// in longinConfirm
+// work in longinConfirm
 func checkComfirmStatus(str_Json string) bool {
 	err := json.Unmarshal([]byte(str_Json), &trueData)
 	if err != nil {
@@ -131,6 +131,14 @@ func loginJump() (Cookie string) {
 	return
 }
 
+//正则提取出SESSDATA
+func getSESSDATA() (SESSDATA string) {
+	re := regexp.MustCompile("&SESSDATA=([\\s\\S]*?)&bili_jct")
+	result := re.FindStringSubmatch(trueData.Data.Url)
+	SESSDATA = result[1]
+	return
+}
+
 func LoginQR() {
 	LD := LoginDate{
 		GetloginUrl:  "http://passport.bilibili.com/qrcode/getLoginUrl",
@@ -140,6 +148,6 @@ func LoginQR() {
 	LD.loginInit()
 	LD.loginConfirm()
 	cookie := loginJump()
-	yaml.SaveCookie(cookie)
-	log.Info("成功保存cookie")
+	yaml.SaveCookie(cookie, getSESSDATA())
+	log.Info("成功生成Data.yaml")
 }
