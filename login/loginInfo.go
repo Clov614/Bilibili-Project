@@ -94,11 +94,6 @@ func (LI *LOGINInfo) getLoginInfo() {
 	if err != nil {
 		log.Fatalln("getLoginInfo Error: ", err)
 	}
-	err = json.Unmarshal([]byte(resp.String()), &LI)
-	if err != nil {
-		log.Fatalln("getLoginInfo Error:", err)
-	}
-
 	// 将请求到的json 写入 LoginInfo struct 中
 	err = json.Unmarshal([]byte(resp.String()), &LI)
 	if err != nil {
