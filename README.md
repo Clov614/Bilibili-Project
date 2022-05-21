@@ -10,5 +10,9 @@
 
 ### 主要功能
 - [ ] 下载音视频
+    - 通过bv,av号下载音视频  
 - [ ] 自动投币  
 
+
+## 相关参考  
+[bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)
