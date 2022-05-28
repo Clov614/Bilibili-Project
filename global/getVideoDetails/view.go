@@ -6,6 +6,7 @@ import (
 	"github.com/levigross/grequests"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"regexp"
 )
 
 type View struct {
@@ -19,7 +20,7 @@ var (
 	}
 )
 
-func (VI *VideoInfo) GetVideoInfo() {
+func (VI *VideoInfo) GetVideoInfo(id string) {
 	cookie := http.Cookie{
 		Name:  "SESSDATA",
 		Value: data.SESSDATA,
@@ -28,7 +29,16 @@ func (VI *VideoInfo) GetVideoInfo() {
 		Cookies: []*http.Cookie{
 			&cookie,
 		},
+		Params: map[string]string{},
 	}
+	// 判断是否为avid
+	re, _ := regexp.Compile("^\\d*?$")
+	if re.MatchString(id) {
+		RO.Params["avid"] = id
+	} else {
+		RO.Params["bvid"] = id
+	}
+
 	resp, err := grequests.Get(view.getVideoinfoUrl, &RO)
 	if err != nil {
 		log.Errorf("GetVideoInfo Error: %v", err)
