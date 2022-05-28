@@ -73,7 +73,7 @@ type LOGINInfo struct {
 
 var (
 	data yaml.Data
-	URL  string = "http://api.bilibili.com/nav"
+	URL  string = "https://api.bilibili.com/nav"
 	path        = "Data/Cache/LoginInfo.yaml"
 
 	LI LOGINInfo = LOGINInfo{}

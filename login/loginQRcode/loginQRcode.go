@@ -141,8 +141,8 @@ func getSESSDATA() (SESSDATA string) {
 
 func LoginQR() {
 	LD := LoginDate{
-		GetloginUrl:  "http://passport.bilibili.com/qrcode/getLoginUrl",
-		LogininitUrl: "http://passport.bilibili.com/qrcode/getLoginInfo",
+		GetloginUrl:  "https://passport.bilibili.com/qrcode/getLoginUrl",
+		LogininitUrl: "https://passport.bilibili.com/qrcode/getLoginInfo",
 		res:          RESULT_JSON{},
 	}
 	LD.loginInit()
